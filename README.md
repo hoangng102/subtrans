@@ -13,7 +13,7 @@ Vào trang **[Releases](../../releases/latest)**, tải bản cho hệ điều h
 | Hệ điều hành | Tải | Cài FFmpeg | Chạy | Trạng thái |
 |---|---|---|---|---|
 | Windows 10/11 | `SubTrans-windows.zip` | `winget install Gyan.FFmpeg` | `SubTrans\SubTrans.exe` | Đã dùng thực tế |
-| macOS (Apple Silicon) | `SubTrans-macos.zip` | `brew install ffmpeg` | xem bên dưới | **Thử nghiệm** |
+| macOS (Apple Silicon) | `SubTrans-macos.zip` | `brew install ffmpeg` | xem bên dưới | Đã chạy tốt trên một máy Mac Apple Silicon |
 
 - **Windows:** SmartScreen có thể cảnh báo vì file chưa ký: bấm *More info → Run anyway*.
 - **macOS:** file chưa ký/công chứng nên cần gỡ cờ kiểm dịch rồi chạy từ Terminal:
@@ -44,17 +44,20 @@ python SubTrans.pyw
 ```
 
 - **Windows:** cài FFmpeg (ví dụ `winget install Gyan.FFmpeg`).
-- **macOS:** `brew install ffmpeg python-tk`. *Hỗ trợ macOS đang ở mức thử nghiệm, chưa được kiểm tra trên máy thật.*
+- **macOS:** `brew install ffmpeg python-tk`. *macOS mới được kiểm tra trên một máy Apple Silicon; chạy từ mã nguồn trên Mac chưa được thử.*
 - Video xử lý cạnh file gốc: dữ liệu nằm ở `<video>.subtrans/`, kết quả ở `<video>.vi.ass`.
 
-## Khóa API (tùy chọn)
+## Khóa API: khi nào cần, khi nào không
 
-Bạn có hai cách dùng miễn phí hoàn toàn:
+| Bước | Không cần khóa | Cần khóa / dịch vụ ngoài |
+|---|---|---|
+| Nhận dạng giọng nói | Whisper chạy trên máy (model tải về lần đầu, 150 MB – 1,6 GB) | Groq (nhanh hơn nhiều) |
+| Đọc chữ cứng trên hình | OCR cục bộ (RapidOCR) | Mô hình AI (chính xác hơn với chữ khó) |
+| **Dịch sang tiếng Việt** | **Ollama chạy trên máy bạn** (cần tự cài Ollama và một model) | Claude, OpenAI, Gemini, Groq, ... bằng khóa của chính bạn |
 
-1. **Chỉ dùng Whisper cục bộ** để nhận dạng giọng nói (model tải về lần đầu, 150 MB – 1,6 GB), và OCR cục bộ cho chữ cứng.
-2. **Nhập khóa API của chính bạn** ở nút *Quản lý khóa API* trong tab Dịch. Khóa được lưu mã hóa trên máy (Windows: DPAPI, macOS: Keychain) và chỉ gửi tới nhà cung cấp bạn chọn.
+**Nhận dạng thì không cần khóa API, nhưng bước dịch cần một mô hình AI**: hoặc khóa API của bạn, hoặc Ollama chạy trên máy. Không có cả hai, chương trình dừng với thông báo "Chưa có khóa API" sau bước nhận dạng. (Hỗ trợ Ollama mới được thử với máy chủ giả lập, chưa thử với Ollama thật.)
 
-Bước dịch cần một nhà cung cấp AI (Claude, OpenAI, Gemini, Groq, ... hoặc Ollama chạy trên máy bạn). Groq cho nhận dạng giọng nói rất nhanh (gói miễn phí có giới hạn tốc độ).
+Nhập khóa ở nút *Quản lý khóa API* trong tab Dịch. Khóa được lưu mã hóa trên máy (Windows: DPAPI, macOS: Keychain) và chỉ gửi tới nhà cung cấp bạn chọn. Groq cho nhận dạng giọng nói rất nhanh (gói miễn phí có giới hạn tốc độ).
 
 > Không bao giờ đưa file khóa lên kho mã. `.gitignore` đã chặn `api_key.env*`, `settings.json`, `keys.dat`.
 
