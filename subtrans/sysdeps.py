@@ -95,6 +95,22 @@ def panel_launcher():
     return [str(exe), str(resource_dir() / "SubTransPanel.pyw")]
 
 
+def fix_ssl():
+    """macOS/Linux: Python (nhất là bản đóng gói) thường không biết kho chứng chỉ của hệ thống nên mọi kết nối HTTPS
+    báo CERTIFICATE_VERIFY_FAILED. Trỏ OpenSSL tới bộ chứng chỉ của certifi, hoặc file hệ thống nếu không có certifi.
+    Biến môi trường được các tiến trình con thừa hưởng. Windows dùng kho chứng chỉ hệ thống nên không đổi gì."""
+    if IS_WIN or os.environ.get("SSL_CERT_FILE"):
+        return
+    try:
+        import certifi
+        path = certifi.where()
+    except Exception:
+        path = next((p for p in ("/etc/ssl/cert.pem", "/etc/ssl/certs/ca-certificates.crt",
+                                 "/etc/pki/tls/certs/ca-bundle.crt") if Path(p).is_file()), None)
+    if path and Path(path).is_file():
+        os.environ["SSL_CERT_FILE"] = path
+
+
 def fix_path():
     """Bổ sung PATH để tìm được ffmpeg: Windows nạp lại từ registry; macOS thêm thư mục Homebrew (ứng dụng mở từ Finder
     không thừa hưởng PATH của terminal)."""

@@ -9,6 +9,9 @@ if not FROZEN:
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     sys.path.insert(0, os.getcwd())
 
+from subtrans import sysdeps
+sysdeps.fix_ssl()                                # macOS/Linux: chứng chỉ HTTPS (xem sysdeps.fix_ssl)
+
 # Bản đóng gói chỉ có một file chạy: các chế độ phụ được chọn bằng tham số.
 def _run_mode(fn):
     """Chạy một chế độ phụ. Lỗi chưa bắt được phải in ra rồi thoát: nếu để lọt ra ngoài, bản đóng gói (không có cửa sổ

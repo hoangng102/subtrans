@@ -16,7 +16,7 @@ datas = [
 binaries, hiddenimports = [], ["tkinter", "tkinter.ttk", "tkinter.colorchooser"]
 
 # Các gói có file dữ liệu / thư viện động đi kèm (model OCR, VAD của Whisper, tkdnd, onnxruntime, ctranslate2...)
-for pkg in ("rapidocr_onnxruntime", "faster_whisper", "ctranslate2", "onnxruntime", "tkinterdnd2", "av"):
+for pkg in ("rapidocr_onnxruntime", "faster_whisper", "ctranslate2", "onnxruntime", "tkinterdnd2", "av", "certifi"):
     try:
         d, b, h = collect_all(pkg)
         datas += d
