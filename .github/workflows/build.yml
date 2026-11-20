@@ -1,0 +1,42 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install numpy Pillow
+      - run: python tests/test_segmenter.py
+
+  windows:
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: powershell -ExecutionPolicy Bypass -File packaging/build_windows.ps1
+      - uses: actions/upload-artifact@v4
+        with: { name: SubTrans-windows, path: dist/SubTrans-windows.zip }
+
+  macos:
+    # Chưa được kiểm tra trên máy thật: xem packaging/README.md
+    needs: test
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: brew install ffmpeg python-tk@3.12 || true
+      - run: pip install -r requirements.txt pyinstaller
+      - run: python -m PyInstaller packaging/subtrans.spec --noconfirm
+      - run: cd dist && zip -r SubTrans-macos.zip SubTrans
+      - uses: actions/upload-artifact@v4
+        with: { name: SubTrans-macos, path: dist/SubTrans-macos.zip }

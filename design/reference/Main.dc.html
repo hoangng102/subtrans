@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>SubTrans – Tab Dịch</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif;font-size:13px;color:#171717;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:inherit;text-decoration:none}
+.btn{height:32px;padding:0 12px;border:1px solid #D9D9D9;background:#fff;border-radius:8px;font:500 13px Inter,system-ui,sans-serif;color:#171717;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn:hover{background:#F5F5F5;border-color:#C4C4C4}
+.btn:focus-visible,.fld:focus-visible,.sel select:focus-visible,.tab:focus-visible,.wc:focus-visible{outline:2px solid #F97316;outline-offset:2px}
+.btn-primary{background:#F97316;border-color:#F97316;color:#1A0A00;font-weight:600}
+.btn-primary:hover{background:#FB8A3C;border-color:#FB8A3C}
+.btn-ghost{border-color:transparent;background:transparent;color:#404040}
+.btn-ghost:hover{background:#EDEDED;border-color:transparent}
+.btn:disabled{color:#A3A3A3;background:#F5F5F5;border-color:#EBEBEB;cursor:not-allowed}
+.btn-sm{height:28px;padding:0 10px;font-size:12px;border-radius:6px}
+.fld{height:32px;width:100%;border:1px solid #D9D9D9;border-radius:8px;padding:0 10px;font:400 13px Inter,system-ui,sans-serif;color:#171717;background:#fff}
+.fld:disabled{background:#F5F5F5;color:#A3A3A3}
+.sel{position:relative;display:block;width:100%}
+.sel select{appearance:none;-webkit-appearance:none;width:100%;height:32px;border:1px solid #D9D9D9;border-radius:8px;padding:0 30px 0 10px;font:400 13px Inter,system-ui,sans-serif;color:#171717;background:#fff;cursor:pointer;text-overflow:ellipsis}
+.sel svg{position:absolute;right:10px;top:50%;margin-top:-6px;width:12px;height:12px;pointer-events:none;color:#737373}
+.card{background:#fff;border:1px solid #E6E6E6;border-radius:12px;padding:16px}
+.lbl{font-size:12px;font-weight:500;color:#525252;display:block;margin-bottom:6px}
+.h{font-size:13px;font-weight:600;color:#171717;margin:0}
+.hint{font-size:12px;color:#6B6B6B;line-height:1.5}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;color:#171717}
+.chk input{width:16px;height:16px;margin:0;accent-color:#F97316}
+.chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;background:#F0F0F0;color:#404040;font-size:12px;font-weight:500}
+.num{width:18px;height:18px;border-radius:50%;background:#EDEDED;color:#404040;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+.btn-primary .num{background:#1A0A00;color:#F97316}
+.wc{width:46px;height:40px;border:0;background:transparent;color:#525252;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.wc:hover{background:#EDEDED}
+.tab{display:flex;align-items:center;font-weight:500;color:#6B6B6B;border-bottom:2px solid transparent}
+.tab:hover{color:#171717}
+.tab.on{color:#171717;border-bottom-color:#F97316}
+.mono{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace}
+</style>
+</helmet>
+<div style="width:1080px;height:1040px;display:flex;flex-direction:column;background:#F5F5F5;border:1px solid #D4D4D4;border-radius:10px;overflow:hidden;color:#171717">
+
+  <!-- Title bar -->
+  <div style="height:40px;flex:none;background:#fff;display:flex;align-items:center;justify-content:space-between;padding-left:14px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="width:20px;height:20px;border-radius:6px;background:#F97316;display:inline-flex;align-items:center;justify-content:center">
+        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="1" y="3" width="10" height="1.8" rx=".9" fill="#1A0A00"/><rect x="2.5" y="7" width="7" height="1.8" rx=".9" fill="#1A0A00"/></svg>
+      </span>
+      <span style="font-weight:600">SubTrans</span>
+      <span style="color:#6B6B6B">Dịch hardsub sang tiếng Việt</span>
+    </div>
+    <div style="display:flex;height:100%">
+      <button class="wc" aria-label="Thu nhỏ"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M1.5 6h9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+      <button class="wc" aria-label="Phóng to"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></button>
+      <button class="wc" aria-label="Đóng"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <nav style="height:45px;flex:none;background:#fff;border-bottom:1px solid #E6E6E6;display:flex;align-items:stretch;gap:28px;padding:0 24px">
+    <a class="tab on" href="Main.dc.html" aria-current="page">Dịch</a>
+    <a class="tab" href="Edit.dc.html">Chỉnh sửa &amp; kiểu phụ đề</a>
+  </nav>
+
+  <!-- Content -->
+  <div style="flex:1;min-height:0;padding:20px 24px;display:flex;flex-direction:column;gap:16px">
+
+    <!-- Queue -->
+    <section class="card" style="flex:none;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+        <div style="display:flex;align-items:baseline;gap:12px">
+          <h2 class="h">Hàng đợi video</h2>
+          <span class="hint">Kéo thả video hoặc thư mục vào đây, xử lý lần lượt</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="btn btn-sm"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Thêm video…</button>
+          <button class="btn btn-sm"><svg width="13" height="12" viewBox="0 0 13 12" aria-hidden="true"><path d="M1.5 3.2c0-.7.5-1.2 1.2-1.2h2.4l1.3 1.4h4c.7 0 1.2.5 1.2 1.2v4.2c0 .7-.5 1.2-1.2 1.2H2.7c-.7 0-1.2-.5-1.2-1.2z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>Thêm thư mục…</button>
+          <span style="width:1px;height:20px;background:#E6E6E6;margin:0 4px"></span>
+          <button class="btn btn-sm btn-ghost">Xóa mục chọn</button>
+          <button class="btn btn-sm btn-ghost">Xóa tất cả</button>
+        </div>
+      </div>
+      <div style="height:64px;border:1px dashed #CFCFCF;border-radius:10px;background:#FAFAFA;padding:6px">
+        <div style="height:100%;display:flex;align-items:center;gap:10px;padding:0 12px;border-radius:7px;background:#FFF4EC">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="color:#C2410C"><rect x="1.5" y="3" width="13" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6.8 6.2v3.6l3-1.8z" fill="currentColor"/></svg>
+          <span style="font-weight:500">example.mp4</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two columns -->
+    <div style="flex:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch">
+
+      <!-- Recognition -->
+      <section class="card" style="display:flex;flex-direction:column;gap:14px">
+        <h2 class="h">Nhận dạng và dịch</h2>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px">
+          <div>
+            <label class="lbl" for="lang">Ngôn ngữ gốc</label>
+            <span class="sel"><select id="lang"><option>zh</option><option>ja</option><option>ko</option><option>en</option></select><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+          <div>
+            <label class="lbl" for="area">Vùng sub (theo chiều cao)</label>
+            <input class="fld mono" id="area" type="text" value="0.75-1.0">
+          </div>
+          <div style="grid-column:span 2">
+            <label class="lbl" for="detect">Nhận diện sub</label>
+            <span class="sel"><select id="detect"><option>Theo nét chữ, mọi màu/nền (khuyên dùng)</option></select><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+          <div style="grid-column:span 2">
+            <label class="lbl" for="ocr">Đọc chữ bằng</label>
+            <span class="sel"><select id="ocr"><option>Mô hình AI ở trên (chính xác, nhanh)</option></select><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div style="height:1px;background:#EFEFEF"></div>
+        <label class="chk"><input type="checkbox" checked> Dịch toàn bộ video</label>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px">
+          <div>
+            <label class="lbl" for="from">Chỉ thử đoạn: từ giây</label>
+            <input class="fld mono" id="from" type="text" disabled>
+          </div>
+          <div>
+            <label class="lbl" for="dur">Dài (giây)</label>
+            <input class="fld mono" id="dur" type="text" disabled>
+          </div>
+        </div>
+        <label class="chk" style="align-items:flex-start;line-height:1.4"><input type="checkbox" checked style="margin-top:1px;flex:none"> Ảnh mô hình không đọc được: đọc bằng OCR cục bộ (nhận diện đủ chữ)</label>
+      </section>
+
+      <!-- AI models -->
+      <section class="card" style="display:flex;flex-direction:column;gap:14px">
+        <div>
+          <h2 class="h">Mô hình AI</h2>
+          <p class="hint" style="margin:2px 0 0">Chọn nhà cung cấp và model cho từng bước</p>
+        </div>
+
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <label class="lbl" for="p1" style="margin:0">Đọc chữ trong ảnh</label>
+            <button class="btn btn-sm btn-ghost" style="color:#C2410C">Tải danh sách model</button>
+          </div>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px">
+            <span class="sel"><select id="p1"><option>OpenAI</option><option>Claude (Anthropic)</option><option>Gemini</option></select><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="sel"><select aria-label="Model đọc chữ"><option>gpt-4o</option></select><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <label class="lbl" for="p2" style="margin:0">Dịch sang tiếng Việt</label>
+            <button class="btn btn-sm btn-ghost" style="color:#C2410C">Tải danh sách model</button>
+          </div>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px">
+            <span class="sel"><select id="p2"><option>Claude (Anthropic)</option><option>OpenAI</option><option>Gemini</option></select><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="sel"><select aria-label="Model dịch"><option>claude-sonnet-5-5</option></select><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+
+        <div style="height:1px;background:#EFEFEF"></div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span class="lbl" style="margin:0">Khóa API</span>
+            <span class="chip"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.2 2.2 4.8-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Claude</span>
+            <span class="chip"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.2 2.2 4.8-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>OpenAI</span>
+            <span class="chip"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.2 2.2 4.8-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Gemini</span>
+          </div>
+          <button class="btn btn-sm" style="flex:none">Mở file khóa API</button>
+        </div>
+
+        <p class="hint" style="margin:0;padding:10px 12px;background:#F5F5F5;border-radius:8px">Mỗi nhà cung cấp tính phí riêng và có chính sách nội dung riêng. Tool không tự chuyển sang nhà khác khi một mô hình từ chối một dòng. Bạn có thể gõ tay tên model nếu danh sách chưa có.</p>
+      </section>
+    </div>
+
+    <p class="hint" style="flex:none;margin:-4px 0 0;display:flex;gap:8px;align-items:flex-start">
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" style="flex:none;margin-top:2px;color:#737373"><circle cx="7" cy="7" r="5.6" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M7 6.3v3.2M7 4.5v.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span>Kiểu phụ đề (màu, viền, cỡ chữ, vị trí…) và việc xuất kèm .srt/chữ gốc chỉnh ở tab “Chỉnh sửa &amp; kiểu phụ đề”. Mặc định chỉ xuất một file .ass.</span>
+    </p>
+
+    <!-- Run -->
+    <section class="card" style="flex:none;display:flex;flex-direction:column;gap:12px;padding:14px 16px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn"><span class="num">1</span>Xem trước (miễn phí)</button>
+        <button class="btn"><span class="num">2</span>Ước lượng</button>
+        <button class="btn btn-primary"><span class="num">3</span>Dịch</button>
+        <button class="btn btn-ghost" disabled><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="currentColor"/></svg>Dừng</button>
+        <span style="flex:1"></span>
+        <button class="btn">Xuất lại theo kiểu hiện tại</button>
+      </div>
+      <div style="height:6px;border-radius:999px;background:#EAEAEA;overflow:hidden" role="progressbar" aria-label="Tiến trình" aria-valuemin="0" aria-valuemax="100" aria-valuenow="4">
+        <div style="width:4%;height:100%;background:#F97316;border-radius:999px"></div>
+      </div>
+    </section>
+
+    <!-- Log -->
+    <section class="card" style="flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding:12px 16px 16px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h2 class="h">Nhật ký</h2>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-sm btn-ghost">Chỉnh sửa phụ đề của video chọn</button>
+          <button class="btn btn-sm btn-ghost">Mở ảnh xem trước</button>
+          <button class="btn btn-sm btn-ghost">Mở thư mục video</button>
+        </div>
+      </div>
+      <pre class="mono" style="flex:1;min-height:0;margin:0;overflow:hidden;padding:12px 14px;background:#FAFAFA;border:1px solid #EFEFEF;border-radius:8px;font-size:12px;line-height:1.7;color:#262626;white-space:pre-wrap">Khóa API: Claude ✔ | OpenAI ✔ | Gemini ✔
+Thêm một hoặc nhiều video, bấm 'Xem trước' để kiểm tra vùng sub, rồi bấm 'Dịch'.
+
+Đã thêm 1 video vào hàng đợi.
+
+Đã lưu chỉnh sửa: C:\Videos\Example\example.vi.ass</pre>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1080,"height":1040}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

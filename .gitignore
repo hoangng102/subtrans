@@ -1,0 +1,52 @@
+# --- bí mật và cấu hình riêng của từng người: KHÔNG BAO GIỜ đưa lên kho mã ---
+api_key.env
+api_key.env.txt
+.env
+*.env.txt
+dev.flag
+settings.json
+keys.dat
+
+# --- dữ liệu sinh ra khi chạy ---
+*.subtrans/
+*.subtrans_test/
+*.vi.ass
+*.vi.srt
+*.src.srt
+*.test.vi.*
+asr_raw.json
+cues.json
+audio.wav
+
+# --- video mẫu/video thử (nặng, có thể có bản quyền) ---
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.webm
+*.ts
+*.flv
+*.m4v
+demo*
+
+# --- bản sao lưu nội bộ ---
+design/_backup/
+*.bak
+*.tmp
+
+# --- Python / build ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+build/
+dist/
+*.spec.bak
+*.egg-info/
+.pytest_cache/
+
+# --- hệ điều hành / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
