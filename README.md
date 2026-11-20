@@ -6,6 +6,24 @@
 
 Công cụ chạy trên máy bạn để tạo **phụ đề tiếng Việt (`.ass`)** cho video, dùng với VLC.
 
+## Tải về và dùng ngay
+
+Vào trang **[Releases](../../releases/latest)**, tải bản cho hệ điều hành của bạn, giải nén rồi chạy. Cần cài **FFmpeg** trước (chương trình sẽ báo nếu thiếu).
+
+| Hệ điều hành | Tải | Cài FFmpeg | Chạy | Trạng thái |
+|---|---|---|---|---|
+| Windows 10/11 | `SubTrans-windows.zip` | `winget install Gyan.FFmpeg` | `SubTrans\SubTrans.exe` | Đã dùng thực tế |
+| macOS (Apple Silicon) | `SubTrans-macos.zip` | `brew install ffmpeg` | xem bên dưới | **Thử nghiệm** |
+
+- **Windows:** SmartScreen có thể cảnh báo vì file chưa ký: bấm *More info → Run anyway*.
+- **macOS:** file chưa ký/công chứng nên cần gỡ cờ kiểm dịch rồi chạy từ Terminal:
+  ```bash
+  xattr -cr ~/Downloads/SubTrans && ~/Downloads/SubTrans/SubTrans
+  ```
+  (đổi đường dẫn theo nơi bạn giải nén). Bản macOS là file chạy thường, chưa phải `.app`.
+- Lần đầu dùng: mở **Quản lý khóa API** để dán khóa của nhà cung cấp AI bạn chọn, hoặc chọn Whisper chạy trên máy (không cần khóa cho bước nhận dạng).
+- Gặp lỗi khi mở? Gửi kèm file `crash.log` (Windows: `%APPDATA%\SubTrans`, macOS: `~/Library/Application Support/SubTrans`) khi [báo lỗi](../../issues).
+
 ## Tính năng
 
 - **Hai nguồn chữ**
@@ -78,4 +96,6 @@ MIT, xem `LICENSE`. Phần mềm và font bên thứ ba: `THIRD_PARTY_NOTICES.md
 
 ## Đóng góp
 
-Pull request và issue đều được hoan nghênh. Chạy `python tests/test_segmenter.py` trước khi gửi. Phần macOS/Linux cần người có máy thật để kiểm tra.
+Pull request và issue đều được hoan nghênh. Chạy `python tests/test_segmenter.py` trước khi gửi. Phần macOS/Linux cần người có máy thật để kiểm tra: nếu bạn dùng Mac hoặc Linux, mọi báo cáo lỗi và bản sửa đều rất quý.
+
+Không bao giờ đưa khóa API, `settings.json` hay video của bạn vào commit (`.gitignore` đã chặn các file này).
