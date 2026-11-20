@@ -426,8 +426,15 @@ def preview_speech(args):
     built = segmenter.build([{**s, "start": s["start"] + off, "end": s["end"] + off} for s in segs])
     for c in built:
         print(f"  [{c['start']:8.1f} -> {c['end']:8.1f}] {c['src']}")
-    print(f"Tổng: {len(built)} cue trong {dur:g} giây, mất {time.monotonic() - t0:.0f} giây. Kết quả này chỉ để xem thử, "
-          "chưa lưu gì.")
+    print(f"Tổng: {len(built)} cue trong {dur:g} giây, mất {time.monotonic() - t0:.0f} giây. Đây chỉ là bản xem thử: "
+          "chưa tạo phụ đề và chưa dịch.")
+    try:                                    # lưu bản ghi để người dùng mở xem lại (nút 'Mở thư mục xem trước')
+        out = workdir / "speech_preview.txt"
+        out.write_text("\n".join(f"[{c['start']:8.1f} -> {c['end']:8.1f}] {c['src']}" for c in built) + "\n",
+                       encoding="utf-8")
+        print(f"Đã lưu bản ghi xem thử: {out}")
+    except OSError:
+        pass
     try:
         wav.unlink()
     except OSError:

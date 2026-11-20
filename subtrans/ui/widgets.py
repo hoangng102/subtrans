@@ -921,8 +921,6 @@ class TabPanel(Card):
         self.cells.append((cell, lbl, line))
         if self.current is None:
             self.select(0)
-        else:
-            page.grid_remove()
         return inner
 
     def _step(self, i, d):
@@ -931,10 +929,7 @@ class TabPanel(Card):
         self.cells[j][0].focus_set()
 
     def select(self, i):
-        for j, p in enumerate(self.pages):
-            if j != i:
-                p.grid_remove()
-        self.pages[i].grid()
+        self.pages[i].tkraise()            # xếp chồng + nâng lên (không ẩn/hiện: xem ghi chú ở TabView.add)
         self.current = i
         self._paint()
         if self._on_select:
@@ -1063,7 +1058,7 @@ class ScrollPage(tk.Frame):
         self._h = 1
         self._view = 1
         self.vp.bind("<Configure>", self._fit)
-        self.bind("<<TabShown>>", self._fit)
+        self.bind("<<TabShown>>", self._shown)
         self.bind_all("<MouseWheel>", self._wheel, add="+")
         self.after(self.POLL_MS, self._poll)
 
@@ -1075,6 +1070,12 @@ class ScrollPage(tk.Frame):
             self.after(self.POLL_MS, self._poll)
         except tk.TclError:
             pass
+
+    def _shown(self, e=None):
+        """Trang vừa được chuyển tới: bố trí lại ngay, không bỏ qua dù kích thước không đổi (macOS có thể không vẽ lại
+        trang vừa hiện lại nếu không được đặt lại vị trí)."""
+        self._last = None
+        self._fit()
 
     def _fit(self, e=None):
         if self._last is None:          # first display: lay out at once, no blank flash
@@ -1158,8 +1159,9 @@ class TabView(tk.Frame):
         Label(box, brand[0], kind="h").pack(side="left", padx=(px(10), 0))
 
     def add(self, page, text):
+        # Mọi trang xếp chồng trong cùng một ô lưới; chuyển tab bằng tkraise() thay vì ẩn/hiện (grid_remove/grid).
+        # Cách ẩn/hiện làm trang bị trắng khi quay lại trên macOS (Tk Aqua không vẽ lại các widget con đặt bằng place()).
         page.grid(row=0, column=0, sticky="nsew", in_=self.content)
-        page.grid_remove()
         cell = tk.Frame(self.bar, bg=T.SURFACE, cursor="hand2", takefocus=1)
         cell.pack(side="left", fill="y", padx=(0, px(28)))
         lbl = tk.Label(cell, text=text, bg=T.SURFACE, font=T.font(13, "medium"), bd=0)
@@ -1183,12 +1185,11 @@ class TabView(tk.Frame):
     def select(self, page):
         if isinstance(page, int):
             page = self.pages[page]
-        for p in self.pages:
-            p.grid_remove()
-        page.grid()
+        page.tkraise()
         self.current = page
         self._paint()
         page.event_generate("<<TabShown>>")
+        page.update_idletasks()
 
     def _paint(self):
         for p, (cell, lbl, line) in zip(self.pages, self.tabs_):

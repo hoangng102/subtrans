@@ -707,8 +707,11 @@ class App(BaseTk):
         p = self.focus_video()
         if p:
             d = Path(p).with_suffix(".subtrans") / "preview" / "frames"
+            txt = Path(p).with_suffix(".subtrans") / "preview" / "speech_preview.txt"
             if d.is_dir():
                 sysdeps.open_path(d)
+            elif txt.is_file():                       # xem thử giọng nói: một file văn bản, không có ảnh
+                sysdeps.open_path(txt)
             else:
                 messagebox.showinfo("SubTrans", "Chưa có ảnh xem trước cho video này. Bấm 'Xem trước' trước.")
 
