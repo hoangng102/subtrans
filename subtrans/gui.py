@@ -838,6 +838,11 @@ class App(BaseTk):
             if not self.videos:
                 messagebox.showwarning("SubTrans", "Hãy thêm ít nhất một video.")
             return
+        sysdeps.fix_path()
+        problem = sysdeps.ffmpeg_problem()
+        if problem:
+            messagebox.showerror("SubTrans", problem)
+            return
         missing = self.missing_keys(kind)
         if missing:
             if messagebox.askyesno("SubTrans", "Chưa có khóa API cho: " + ", ".join(missing) +

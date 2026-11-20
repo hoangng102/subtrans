@@ -95,6 +95,17 @@ def panel_launcher():
     return [str(exe), str(resource_dir() / "SubTransPanel.pyw")]
 
 
+def ffmpeg_problem():
+    """None nếu có cả ffmpeg và ffprobe; nếu thiếu, trả về hướng dẫn cài (bản đóng gói không kèm FFmpeg)."""
+    missing = [n for n in ("ffmpeg", "ffprobe") if not shutil.which(n)]
+    if not missing:
+        return None
+    how = ("winget install Gyan.FFmpeg" if IS_WIN else "brew install ffmpeg" if IS_MAC
+           else "sudo apt install ffmpeg   (hoặc dùng trình quản lý gói của bản Linux bạn đang dùng)")
+    return (f"Chưa tìm thấy {' và '.join(missing)}. SubTrans cần FFmpeg để đọc video.\n"
+            f"Cài bằng lệnh:  {how}\nrồi đóng và mở lại SubTrans.")
+
+
 def fix_ssl():
     """macOS/Linux: Python (nhất là bản đóng gói) thường không biết kho chứng chỉ của hệ thống nên mọi kết nối HTTPS
     báo CERTIFICATE_VERIFY_FAILED. Trỏ OpenSSL tới bộ chứng chỉ của certifi, hoặc file hệ thống nếu không có certifi.

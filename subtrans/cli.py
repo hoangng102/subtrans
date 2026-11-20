@@ -11,7 +11,7 @@ from pathlib import Path
 
 from difflib import SequenceMatcher
 
-from . import asr, audio, config, export, frames, llm, providers, segmenter
+from . import asr, audio, config, export, frames, llm, providers, segmenter, sysdeps
 from .declined import is_refusal_note, is_refusal_src, mark_declined
 from .providers import ProviderError
 
@@ -706,6 +706,10 @@ def main():
     p.set_defaults(fn=cmd_fix)
 
     args = ap.parse_args()
+    sysdeps.fix_path()
+    problem = sysdeps.ffmpeg_problem()
+    if problem:
+        raise SystemExit(problem)
     args.fn(args)
 
 
