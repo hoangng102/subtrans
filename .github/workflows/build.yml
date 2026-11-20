@@ -29,7 +29,7 @@ jobs:
   macos:
     # Chưa được kiểm tra trên máy thật: xem packaging/README.md
     needs: test
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
